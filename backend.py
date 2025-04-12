@@ -4,6 +4,8 @@ from PIL import Image
 import io
 import os
 
+print("PORT:", os.environ.get("PORT"))
+
 app = Flask(__name__)
 UPLOAD_FOLDER = 'uploads'
 PROCESSED_FOLDER = 'static/processed'
