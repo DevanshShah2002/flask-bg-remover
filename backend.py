@@ -3,6 +3,10 @@ from rembg import remove
 from PIL import Image
 import io
 import os
+from rembg import remove, new_session
+
+# Preload the model at startup
+session = new_session("u2net")  # or "u2netp" for smaller model
 
 print("PORT:", os.environ.get("PORT"))
 
@@ -30,7 +34,11 @@ def remove_bg():
     output_image=None
     input_image = Image.open(file.stream)
     print(input_image)
-    output_image = remove(input_image)
+    try:
+        output_image = remove(input_image,session=session)
+    except Exception as e:
+        print("Error in remove():", e)
+        return "Background removal failed", 500
     print(output_image)
     output_image_path = os.path.join(PROCESSED_FOLDER, 'output.png')
     output_image.save(output_image_path, format='PNG')
