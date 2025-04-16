@@ -22,9 +22,11 @@ output_image_path = None
 def index():
     return render_template('index.html', output_image=output_image_path)
 
-@app.route('/remove-bg', methods=['POST'])
+@app.route('/remove-bg', methods=['GET', 'POST'])
 def remove_bg():
     global output_image_path
+    if request.method == 'GET':
+        return "This route only accepts POST requests from the form.", 405
     if 'image' not in request.files:
         return "No file uploaded", 400
     
@@ -53,6 +55,7 @@ def download():
     if output_image_path:
         return send_file(output_image_path, mimetype='image/png', as_attachment=True, download_name='output.png')
     return "No image available", 400
+
 
 
 
