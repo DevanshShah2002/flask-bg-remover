@@ -6,7 +6,7 @@ import os
 from rembg import remove, new_session
 
 # Preload the model at startup
-session = new_session("u2net")  # or "u2netp" for smaller model
+session = new_session("u2netp")  # or "u2netp" for smaller model
 
 print("PORT:", os.environ.get("PORT"))
 
