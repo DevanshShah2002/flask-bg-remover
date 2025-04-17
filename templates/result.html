@@ -11,10 +11,9 @@
         <input type="file" name="image" accept="image/*" required>
         <button type="submit">Upload</button>
     </form>
-    {% if output_image and output_image|length > 0 %}
-        <img src="{{ output_image }}" alt="Processed Image" width="300">
-        <br>
-        <a href="/download"><button>Download</button></a>
+    {% if output_image %}
+        <h2>Result:</h2>
+        <img src="data:image/png;base64,{{ output_image }}" alt="Processed Image">
     {% else %}
         <h1> retry something wrong </h1>
     {% endif %}

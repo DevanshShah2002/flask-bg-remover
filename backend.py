@@ -24,30 +24,50 @@ def index():
 
 @app.route('/remove-bg', methods=['GET', 'POST'])
 def remove_bg():
-    global output_image_path
-    if request.method == 'GET':
-        return "This route only accepts POST requests from the form.", 405
+    # global output_image_path
+    # if request.method == 'GET':
+    #     return "This route only accepts POST requests from the form.", 405
+    # if 'image' not in request.files:
+    #     return "No file uploaded", 400
+    
+    # file = request.files['image']
+    # if file.filename == '':
+    #     return "No selected file", 400
+    # output_image=None
+    # input_image = Image.open(file.stream)
+    # print(input_image)
+    # try:
+    #     output_image = remove(input_image,session=session)
+    # except Exception as e:
+    #     print("Error in remove():", e)
+    #     return "Background removal failed", 500
+    # print(output_image)
+    # output_image_path = os.path.join(PROCESSED_FOLDER, 'output.png')
+    # output_image.save(output_image_path, format='PNG')
+    # print(output_image_path)
+    # image_url = url_for('static', filename='processed/output.png') if output_image else None
+    # return render_template('result.html', output_image=image_url)
     if 'image' not in request.files:
         return "No file uploaded", 400
-    
+
     file = request.files['image']
     if file.filename == '':
         return "No selected file", 400
-    output_image=None
-    input_image = Image.open(file.stream)
-    print(input_image)
-    try:
-        output_image = remove(input_image,session=session)
-    except Exception as e:
-        print("Error in remove():", e)
-        return "Background removal failed", 500
-    print(output_image)
-    output_image_path = os.path.join(PROCESSED_FOLDER, 'output.png')
-    output_image.save(output_image_path, format='PNG')
-    print(output_image_path)
-    image_url = url_for('static', filename='processed/output.png') if output_image else None
-    return render_template('result.html', output_image=image_url)
 
+    try:
+        input_image = Image.open(file.stream)
+        output_image = remove(input_image, session=session)
+
+        buffer = io.BytesIO()
+        output_image.save(buffer, format='PNG')
+        buffer.seek(0)
+
+        img_base64 = base64.b64encode(buffer.getvalue()).decode('utf-8')
+        return render_template('result.html', output_image=img_base64)
+
+    except Exception as e:
+        print("Error:", e)
+        return "Something went wrong", 500
     
 
 @app.route('/download')
